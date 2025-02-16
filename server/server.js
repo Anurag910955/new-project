@@ -7,20 +7,23 @@ const db = require("./config/db");
 
 const app = express();
 
-// ✅ FIXED: Proper CORS Setup
+// ✅ Fix CORS Issue
 app.use(
   cors({
-    origin: "https://project-frontend-hazel-two.vercel.app", // Frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "https://project-frontend-hazel-two.vercel.app", // Your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
+// ✅ Ensure Preflight Requests are Handled
+app.options("*", cors());
+
 // ✅ Middleware
 app.use(bodyParser.json());
 
-// ✅ Improved Logging Middleware (Shows Request Body)
+// ✅ Logging Middleware (for debugging)
 app.use((req, res, next) => {
   console.log(`📩 [${req.method}] ${req.url}`);
   if (req.body && Object.keys(req.body).length > 0) {
