@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../config"; // Import backend URL
 import "../form.css"; // Import global styles
 
 const ResumeForm = () => {
@@ -62,7 +63,7 @@ const ResumeForm = () => {
     const userId = existingData?.userId || 1; // Default userId (Replace with actual user system)
 
     try {
-      await axios.post("http://localhost:5000/api/resume/save", { userId, ...formData });
+      await axios.post(`${API_BASE_URL}/api/resume/save`, { userId, ...formData });
 
       alert(existingData ? "Resume updated successfully!" : "Resume saved successfully!");
       navigate("/resume-preview", { state: { ...formData, userId } });
