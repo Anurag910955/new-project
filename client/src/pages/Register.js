@@ -1,28 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../config"; // Import backend URL
 import "../register.css"; // Import global styles
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // For loading state
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
+
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", { name, email, password });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { name, email, password });
+
       alert(res.data.message);
+
       if (res.data.message === "User registered successfully") {
         navigate("/");
       }
     } catch (error) {
-      alert("Registration failed");
+      console.error("Registration error:", error);
+      alert(error.response?.data?.message || "Registration failed");
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
