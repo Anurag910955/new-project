@@ -1,18 +1,22 @@
 const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",  // Change if your MySQL username is different
-  password: "@Success910",  // Add your MySQL password if set
-  database: "resume_builder",
+const pool = mysql.createPool({
+  host: process.env.DB_HOST, // Make sure these are set in Vercel
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-db.connect((err) => {
+pool.getConnection((err, connection) => {
   if (err) {
-    console.error("Database connection failed: " + err.message);
+    console.error("❌ Database connection failed:", err.message);
   } else {
-    console.log("Connected to MySQL database.");
+    console.log("✅ Database connected successfully!");
+    connection.release();
   }
 });
 
-module.exports = db;
+module.exports = pool.promise(); // Use promise-based queries
